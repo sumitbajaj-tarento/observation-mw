@@ -311,6 +311,7 @@ export const menteeConsolidatedObservationAttemptsV2 = async (req: any, res: any
                     as: 'attemptsMentoringRelationshipMapping'
                 }
             ],
+            order: [['createdAt', 'DESC']]
         });
         const result = menteeAttemptInstance.reduce((grouped: any, item: any) => {
             const key = item[groupBy];
