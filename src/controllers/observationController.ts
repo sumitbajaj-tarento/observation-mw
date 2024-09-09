@@ -145,6 +145,7 @@ export const getMentorAssignedSolutionsList = async (req: any, res: any) => {
             {
                 model: MentoringObservation,
                 attributes: ['solution_id',],
+                where: { status: "active" },
                 include: [{
                     model: ObservationData,
                     as: 'observationData',

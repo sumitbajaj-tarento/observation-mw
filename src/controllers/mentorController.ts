@@ -15,7 +15,7 @@ export const getObservationForMentee = async (req: any, res: any) => {
       include: [
         {
           model: MentoringObservation,
-          attributes: ['type', 'observation_id', 'solution_id', 'otp_verification_status', 'submission_status', 'attempted_count', 'scheduled_on', 'otp_verified_on'],
+          attributes: ['type','status', 'observation_id', 'solution_id', 'otp_verification_status', 'submission_status', 'attempted_count', 'scheduled_on', 'otp_verified_on'],
           include: [{
             model: ObservationData,
             as: 'observationData',
@@ -52,7 +52,8 @@ export const getAllMenteeForMentor = async (req: any, res: any) => {
       include: [
         {
           model: MentoringObservation,
-          attributes: ['type', 'observation_id', 'solution_id', 'otp_verification_status', 'submission_status', 'attempted_count', 'scheduled_on', 'otp_verified_on'],
+          attributes: ['type','status', 'observation_id', 'solution_id', 'otp_verification_status', 'submission_status', 'attempted_count', 'scheduled_on', 'otp_verified_on'],
+          where:{"status":"active"},
           include: [{
             model: ObservationData,
             as: 'observationData',
@@ -76,6 +77,7 @@ export const getAllMenteeForMentor = async (req: any, res: any) => {
 export const getMentorMenteeDetailsFiltered = async (req: any, res: any) => {
   try {
     const { menteeMentorDetails, filters } = req.body;
+    filters.status="active"
     const mentorMenteeFilters = Object.fromEntries(
       Object.entries(menteeMentorDetails).filter(([_key, value]) => value !== '')
     );
@@ -87,7 +89,7 @@ export const getMentorMenteeDetailsFiltered = async (req: any, res: any) => {
       include: [
         {
           model: MentoringObservation,
-          attributes: ['type', 'observation_id', 'solution_id', 'otp_verification_status', 'submission_status', 'attempted_count', 'scheduled_on', 'otp_verified_on'],
+          attributes: ['type','status', 'observation_id', 'solution_id', 'otp_verification_status', 'submission_status', 'attempted_count', 'scheduled_on', 'otp_verified_on'],
           where: filters,
           include: [{
             model: ObservationData,
@@ -114,15 +116,18 @@ export const mentorObservationFilteredCount = async (req: any, res: any) => {
     const filters = {
       "pending": {
         "otp_verification_status": "",
-        "submission_status": ""
+        "submission_status": "",
+        "status":"active"
       },
       "inProgress": {
         "otp_verification_status": "verified",
-        "submission_status": ""
+        "submission_status": "",
+        "status":"active"
       },
       "completed": {
         "otp_verification_status": "verified",
-        "submission_status": "submitted"
+        "submission_status": "submitted",
+        "status":"active"
       }
     }
     const filterCount = {
@@ -141,7 +146,7 @@ export const mentorObservationFilteredCount = async (req: any, res: any) => {
           include: [
             {
               model: MentoringObservation,
-              attributes: ['type', 'observation_id', 'solution_id', 'otp_verification_status', 'submission_status', 'attempted_count', 'scheduled_on', 'otp_verified_on'],
+              attributes: ['type','status', 'observation_id', 'solution_id', 'otp_verification_status', 'submission_status', 'attempted_count', 'scheduled_on', 'otp_verified_on'],
               where: filters[element as keyof typeof filters],
               include: [{
                 model: ObservationData,
