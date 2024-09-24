@@ -23,7 +23,7 @@ export let userSearch = async (userAttributes: any) => {
 }
 export const userContactInfo = async (userId: string) => {
     logger.info("entered inside user contact info")
-    const query = `SELECT * FROM user WHERE userId ='${userId}' ALLOW FILTERING`;
+    const query = `SELECT * FROM user WHERE id ='${userId}' ALLOW FILTERING`;
     const cassandraUserInfo = await client.execute(query)
     const userPhone = cassandraUserInfo.rows[0].phone;
     logger.info(userPhone);
